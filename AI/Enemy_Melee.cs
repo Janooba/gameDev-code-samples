@@ -138,6 +138,8 @@ namespace Archaic.Maxim.AI
             UpdateMovement();
         }
 
+        // Sets agent destination if the target moves too far from known destination
+        // for optimization so path isn't calculated every tick
         private void UpdateTargetPosition()
         {
             if (currentTargetPos != Target.transform.position || agent.isStopped)
@@ -156,6 +158,7 @@ namespace Archaic.Maxim.AI
             }
         }
 
+        // Handles animator movement values as well as rotation
         private void UpdateMovement()
         {
             velocity = new Vector2(
@@ -175,7 +178,7 @@ namespace Archaic.Maxim.AI
                 Actor.animator.SetFloat("Forward", velocity.y);
             }
         }
-
+        
         private void HandleAttacks()
         {
             if (CanAttack)
@@ -190,6 +193,7 @@ namespace Archaic.Maxim.AI
             if (events && useAttackAnimation)
                 events.SetBusyTrue();
 
+            // Starts animation which triggers damage, or deals it instantly
             if (useAttackAnimation)
                 Actor.animator.SetTrigger("Attack");
             else
@@ -223,6 +227,7 @@ namespace Archaic.Maxim.AI
             {
                 var physData = PhysDataManager.GetData(hit.GetMaterial(), hit.collider.material, true);
 
+                // for liquid splash sounds
                 if (Actor.GetLiquidDepth() == Trigger_WetZone.Depth.Shallow)
                 {
                     var puddleData = PhysDataManager.GetData("Puddle");
